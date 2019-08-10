@@ -77,8 +77,7 @@ public class SpitAttack : MonoBehaviour
             {
                 canTakeDamage.TakeDamage(attackPower);
             }
-
-            //StartAttack();
+                        
             //particleSystem.Stop();
             //isPlayerHit = true;
         }

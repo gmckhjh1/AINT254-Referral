@@ -20,6 +20,16 @@ public static class GameManager
         
     }
 
+    public enum PlayerState
+    {
+        Normal,
+        Damaged
+    }
+
+    public void SetPlayerState(PlayerState newState)
+    {
+        PlayerState = newState;
+    }
     /// <summary>
     /// Close the Application
     /// </summary>

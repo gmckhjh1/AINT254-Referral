@@ -5,8 +5,14 @@ using UnityEditor.Rendering.PostProcessing;
 
 public class Player : MonoBehaviour, IDamageHandler
 {
-    [SerializeField] private int health = 50;
-    [SerializeField] private GameObject weapon;
+    [SerializeField] private int health = 50;//Player health before death
+    [SerializeField] private GameObject weapon;//Weapon reference
+
+    [SerializeField] private Camera mainCam;//Regular camera
+    [SerializeField] private Camera effectsCam;//Camera reference for damage effects
+    private CameraEffects shakeCam;//Reference to camEffects script
+    private float shakeLength = 0.2f;
+    private float shakeMag = 0.02f;
 
     private static Player sInstance = null;
     public static Player Instance
@@ -34,6 +40,15 @@ public class Player : MonoBehaviour, IDamageHandler
         else
         {
             enabled = false;
+        }
+
+        try
+        {
+            shakeCam = effectsCam.GetComponent<CameraEffects>();
+        }
+        catch
+        {
+            Debug.Log("No reference to cameraEffects for player damage effects");
         }
     }
 
@@ -67,8 +82,19 @@ public class Player : MonoBehaviour, IDamageHandler
         DamagedEffects();
     }
 
+    /// <summary>
+    /// Effects on the player when attacked
+    /// </summary>
     private void DamagedEffects()
     {
+        Debug.Log(effectsCam);
+        mainCam.enabled = false;
+        effectsCam.enabled = true;
         
+
+        shakeCam.InititiateEffects(shakeLength, shakeMag);
+
+        effectsCam.enabled = false;
+        mainCam.enabled = true;
     }
 }

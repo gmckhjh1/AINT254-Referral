@@ -7,7 +7,7 @@ public static class GameManager
     //
     //Class to handle management of game
     //
-    
+
     // Start is called before the first frame update
     static void Start()
     {
@@ -37,5 +37,9 @@ public static class GameManager
     {
         CloseGame();
     }
-        
+
+    public static void GetSpawner()
+    {
+
+    }
 }

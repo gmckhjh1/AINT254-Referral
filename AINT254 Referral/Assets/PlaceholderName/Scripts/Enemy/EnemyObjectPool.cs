@@ -7,13 +7,29 @@ namespace EnemyPool
 {
     //
     //Class to pool enemy objects of various types.
+    //Make sure to only have one of these singleton scripts for pooling per scene.
     //
     public class EnemyObjectPool : MonoBehaviour
     {
+        //Variables for singleton
+        private static EnemyObjectPool sInstance = null;
+        public static EnemyObjectPool Instance
+        {
+            get
+            {
+                if(sInstance == null)
+                {
+                    GameObject singleton = new GameObject();
+                    sInstance = singleton.AddComponent<EnemyObjectPool>();
+                }
+                return sInstance;
+            }
+        }
+
         private List<GameObject> enemies;//List of all enemy objects        
         private static System.Random rand = new System.Random();
         [SerializeField] private int initialPoolSize = 10;
-
+        
         //Queue to store pooled enemyObjs
         //Random objects usually selected due to potential different enemy types
         //but Queue still in use in case of later change
@@ -24,6 +40,20 @@ namespace EnemyPool
         {
             enemies = EnemyFactory.EnemyFactory.GetEnemyTypes();//Initlaise list of enemyobjects
             InitialisePool();
+        }
+
+        private void Awake()
+        {
+            //Set this as singleton EnemyObjectPool if there isn't already one
+            if(sInstance == null)
+            {
+                sInstance = this;
+                name = "EnemyObjectPool";
+            }
+            else
+            {
+                enabled = false;
+            }
         }
 
         /// <summary>
@@ -74,7 +104,7 @@ namespace EnemyPool
             GameObject enemy = RandEnemyHelper();
 
             //Instantiate and disable
-            Instantiate(enemy, transform.position, transform.rotation);
+            Instantiate(enemy, transform.position, transform.rotation);            
             enemy.SetActive(false);
 
             //Add to pool and return

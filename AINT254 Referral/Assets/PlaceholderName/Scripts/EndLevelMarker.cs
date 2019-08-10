@@ -27,7 +27,7 @@ public class EndLevelMarker : MonoBehaviour
     /// </summary>
     void StartAnim()
     {
-        StartCoroutine("Flash");
+        StartCoroutine(Flash());
     }
 
     /// <summary>

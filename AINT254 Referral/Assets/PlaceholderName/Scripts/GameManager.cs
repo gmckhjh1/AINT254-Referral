@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//
+//Class to handle management of game
+//
 public static class GameManager
 {
-    //
-    //Class to handle management of game
-    //
+     
 
     // Start is called before the first frame update
     static void Start()
@@ -20,16 +21,7 @@ public static class GameManager
         
     }
 
-    public enum PlayerState
-    {
-        Normal,
-        Damaged
-    }
-
-    public void SetPlayerState(PlayerState newState)
-    {
-        PlayerState = newState;
-    }
+    
     /// <summary>
     /// Close the Application
     /// </summary>

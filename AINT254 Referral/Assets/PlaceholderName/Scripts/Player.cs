@@ -11,8 +11,20 @@ public class Player : MonoBehaviour, IDamageHandler
     [SerializeField] private Camera mainCam;//Regular camera
     [SerializeField] private Camera effectsCam;//Camera reference for damage effects
     private CameraEffects shakeCam;//Reference to camEffects script
-    private float shakeLength = 0.2f;
-    private float shakeMag = 0.02f;
+    [SerializeField] private float effectLength = 3f;
+    [SerializeField] private float shakeMag = 0.02f;
+
+    //Enum, get and set for playerstate
+    public enum PlayerStates { Normal, Damaged }
+
+    public PlayerStates currState;
+    
+    public PlayerStates state
+    {
+        get { return state; }
+        set { currState = value; }
+    }
+    
 
     private static Player sInstance = null;
     public static Player Instance
@@ -28,7 +40,7 @@ public class Player : MonoBehaviour, IDamageHandler
         }
 
     }
-
+        
     private void Awake()
     {
         //Set this as singleton Player if there isn't already one
@@ -42,6 +54,9 @@ public class Player : MonoBehaviour, IDamageHandler
             enabled = false;
         }
 
+        
+
+        //Try to get cameraEffects script attached to effectCam
         try
         {
             shakeCam = effectsCam.GetComponent<CameraEffects>();
@@ -55,9 +70,8 @@ public class Player : MonoBehaviour, IDamageHandler
     // Start is called before the first frame update
     void Start()
     {
-        UnityEngine.Rendering.PostProcessing.MotionBlur motion = new UnityEngine.Rendering.PostProcessing.MotionBlur();
-
-        motion.active = true;
+        //Set player state to normal
+        currState = PlayerStates.Normal;
     }
 
     // Update is called once per frame
@@ -79,7 +93,9 @@ public class Player : MonoBehaviour, IDamageHandler
             Destroy(gameObject);
         }
         */
+        currState = PlayerStates.Damaged;
         DamagedEffects();
+        
     }
 
     /// <summary>
@@ -87,14 +103,23 @@ public class Player : MonoBehaviour, IDamageHandler
     /// </summary>
     private void DamagedEffects()
     {
-        Debug.Log(effectsCam);
         mainCam.enabled = false;
         effectsCam.enabled = true;
+        shakeCam.InititiateEffects(effectLength, shakeMag);
+
+        this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+                
+    }
+
+    public void CamSwitchNormal()
+    {
         
-
-        shakeCam.InititiateEffects(shakeLength, shakeMag);
-
-        effectsCam.enabled = false;
-        mainCam.enabled = true;
+        //if (currState == PlayerStates.Normal)
+        //{
+            mainCam.enabled = true;
+            effectsCam.enabled = false;
+        //}
+        //else return;
+        
     }
 }

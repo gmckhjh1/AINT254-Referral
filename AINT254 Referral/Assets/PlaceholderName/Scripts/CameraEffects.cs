@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class CameraEffects : MonoBehaviour
 {
-
-    [SerializeField] private Shader blur;
     [SerializeField] Material materialBlur;
-    private MeshRenderer mesh;
-
-    void Start()
-    {
-        mesh = GetComponent<MeshRenderer>();
-        mesh.enabled = false;
-    }
+    [SerializeField] GameObject eyelids;
+    [SerializeField] Animator blink;
+    private bool effectTriggered = false;
 
     /// <summary>
     /// Public call to shake coroutine. 
@@ -23,8 +17,12 @@ public class CameraEffects : MonoBehaviour
     /// <param name="magnitude"></param>
     public void InititiateEffects(float time, float magnitude)
     {
-        SetRenderer();//Enable blur effect
-        StartCoroutine(Shake(time, magnitude));//Start camera shake      
+        if (!effectTriggered)
+        {
+            StartCoroutine(Effects(time, magnitude));//Start camera shake  
+            effectTriggered = true;
+        }
+        else return;
     }
 
     /// <summary>
@@ -35,38 +33,61 @@ public class CameraEffects : MonoBehaviour
     /// <param name="time"></param>
     /// <param name="magnitude"></param>
     /// <returns></returns>
-    private IEnumerator Shake(float time, float magnitude)
+    private IEnumerator Effects(float time, float magnitude)
     {
         Vector3 originalPosition = transform.position;
         float elapsed = 0f;
+        float shakeTime = time * 0.2f;
 
-        while (elapsed < time)
-        {           
+        //Move camera by random range based on provided magnitude
+        //until percentage of time has elapsed.
+        while (elapsed < shakeTime)
+        {
             transform.position = originalPosition + Random.insideUnitSphere * magnitude;
 
+            elapsed += Time.deltaTime;
+        }
+        transform.position = originalPosition;//Move camera back to normal position
+
+        //Continue the blur effects until full time has elapsed
+        while (elapsed < time)
+        {
             elapsed += Time.deltaTime;
             yield return 0;
         }
 
-        transform.position = originalPosition;
-        //Call to disable renderer blur effect
-        SetRenderer();
+        Blink();
+        yield return new WaitForSeconds(.3f);
+
+        Player.Instance.currState = Player.PlayerStates.Normal;//Set player state back to normal
+        Player.Instance.CamSwitchNormal();//Switch back to normal view
+
+        effectTriggered = false;
+
+        yield return new WaitForSeconds(.2f);
+        StopBlink();
+
     }
 
+    /// <summary>
+    /// Apply render texture to camera
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="destination"></param>
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         Graphics.Blit(source, destination, materialBlur);
     }
 
-    private void SetRenderer()
+    private void Blink()
     {
-        if(mesh.enabled == true)
-        {
-            mesh.enabled = false;
-        }
-        else
-        {
-            mesh.enabled = true;
-        }
-    } 
+        eyelids.SetActive(true);
+        blink.enabled = true;
+    }
+
+    private void StopBlink()
+    {
+        eyelids.SetActive(false);
+        blink.enabled = false;
+    }
 }

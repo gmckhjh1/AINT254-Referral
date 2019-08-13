@@ -14,6 +14,7 @@ namespace EnemyFactory
         [SerializeField] private int health = 10;
         private float rangeAttackDistance = 5f;
         private bool isAttacking = false;
+        private StateMachine stateMachine;
         public string Name => "SpitterEnemy";
         public int Health
         {
@@ -21,7 +22,13 @@ namespace EnemyFactory
             private set { Health = value; }
         }
 
-        [SerializeField] private GameObject playerRef;
+        public StateMachine StateMachine
+        {
+            get { return stateMachine; }
+            private set { stateMachine = value; }
+        }
+        public Player Player => Player.Instance;
+
         [SerializeField] private Animation attackAnim;
         [SerializeField] private SpitAttack weapon;
 
@@ -32,12 +39,21 @@ namespace EnemyFactory
             //Get navmeshagent component
             try { m_navAgent = gameObject.GetComponent<NavMeshAgent>(); }
             catch { Debug.Log("No navmeshagent component"); }
+            stateMachine = GetComponent<StateMachine>();
         }
         void Update()
         {
             CurrState();
         }
         
+        private void InitialiseStateMachine()
+        {
+            var states = new Dictionary<Types, BaseState>()
+            {
+                {typeof(BaseState), new BaseState(IEnemy: this) },
+                {typeof() }
+            }
+        }
         /// <summary>
         /// Set current State
         /// </summary>
@@ -53,19 +69,19 @@ namespace EnemyFactory
         private void BasicEnemyBehaviour()
         {           
             //Look at player if not null
-            if (playerRef != null)
+            if (Player != null)
             {
-                transform.LookAt(playerRef.transform);
+                transform.LookAt(Player.transform);
             }
             else return;
 
             //Chase player until attack ditance is reached
-            if(Vector3.Distance(transform.position, playerRef.transform.position) > rangeAttackDistance)
+            if(Vector3.Distance(transform.position, Player.transform.position) > rangeAttackDistance)
             {
                 isAttacking = false;
                 Attack();
                 m_navAgent.enabled = true;                
-                m_navAgent.destination = playerRef.transform.position;                
+                m_navAgent.destination = Player.transform.position;                
             }
             else
             {

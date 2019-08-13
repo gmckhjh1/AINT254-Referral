@@ -6,13 +6,25 @@ using System;
 //
 //Class to start SpitAttack
 //
-public class SpitAttack : MonoBehaviour
+public class SpitAttack : MonoBehaviour, IAttacks
 {
     [SerializeField] private int attackPower = 5;//Set attack power
     [SerializeField] private float attackReload = 3f;//Set wait time between attacks
     [SerializeField] private float attackLength = 2f;//Set length of attack
     [SerializeField] private ParticleSystem particleSystem;//Particle system ref
     Coroutine lastCoroutine;
+
+    public int AttackPower
+    {
+        get { return attackPower; }
+        private set { attackPower = value; }
+    }
+
+    public float AttackReload
+    {
+        get { return attackReload; }
+        private set { attackReload = value; }
+    }
 
     private void Start()
     {

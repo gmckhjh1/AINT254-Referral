@@ -11,12 +11,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [Serializable]
         public class MovementSettings
         {
-            public float ForwardSpeed = 8.0f;   // Speed when walking forward
+            public float ForwardSpeed = 10.0f;   // Speed when walking forward
             public float BackwardSpeed = 4.0f;  // Speed when walking backwards
             public float StrafeSpeed = 4.0f;    // Speed when walking sideways
-            public float RunMultiplier = 2.0f;   // Speed when sprinting
+            public float RunMultiplier = 0.0f;   // Speed when sprinting
 	        public KeyCode RunKey = KeyCode.LeftShift;
-            public float JumpForce = 30f;
+            [HideInInspector] public float JumpForce = 30f;
             public AnimationCurve SlopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
             [HideInInspector] public float CurrentTargetSpeed = 8f;
 
@@ -78,8 +78,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 
         public Camera cam;
+        public Camera effectsCam;
         public MovementSettings movementSettings = new MovementSettings();
         public MouseLook mouseLook = new MouseLook();
+        public MouseLook mouseLookCam2 = new MouseLook();
         public AdvancedSettings advancedSettings = new AdvancedSettings();
 
 
@@ -89,6 +91,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
 
+        private PlayerDodgeControllerExtension m_dodgeController; // Add reference to PlayerController
+        private Vector2 m_dodgeInput; //Get axis input for use in calling dodge methods
+        [SerializeField] private Transform hitBody;//Raycast for vault detection
+        [SerializeField] private Transform hitKnee;//Raycast for slide detection
+        private bool isHitBody;
+        private bool isHitKnee;
 
         public Vector3 Velocity
         {
@@ -123,22 +131,118 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
+            mouseLookCam2.Init(transform, effectsCam.transform);
+            m_dodgeController = GetComponent<PlayerDodgeControllerExtension>();
+
+            CrossPlatformInputManager.SwitchActiveInputMethod(CrossPlatformInputManager.ActiveInputMethod.Hardware);
         }
 
 
         private void Update()
         {
-            RotateView();
+            Debug.DrawLine(hitKnee.transform.position, hitKnee.transform.forward, Color.green);
+            Debug.DrawRay(hitBody.transform.position, hitBody.transform.forward, Color.green);
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
+            RotateView();
+            m_dodgeInput = GetInput();
+            
+            //Call appropriate methods from PlayerDodgeControllerExtension
+            //based on the input from the player.
+            if(CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.x > 0)
+            {                
+                m_dodgeController.StartDodge("Right");
+                Debug.Log("Controller triggering dodge right");
+            }
+            else if(CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.x < 0)
             {
-                m_Jump = true;
+                m_dodgeController.StartDodge("Left");
+            }
+            else if(CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
+            {
+                m_dodgeController.StartDodge("Jump");
+                /*
+                //use switch statement to call appropriate dodge method 
+                //based on the result of raycasting from 2 points.
+                switch (CheckRayDodge())
+                {         
+                    
+                    case "Vault":
+                        StartCoroutine(m_dodgeController.Vault());
+                        break;
+
+                    case "Slide":
+                        StartCoroutine(m_dodgeController.Slide());
+                        break;
+
+                    default:
+                        m_dodgeController.StartDodge("Jump");
+                        break;
+                }         
+                */
+            }
+            //Don't allow the player to jump backwards
+            else if (CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.y < 0)
+            {
+                return;
             }
         }
 
+        /// <summary>
+        /// Use ray casts to check for level geometry in front of player
+        /// at certain heights.
+        /// </summary>
+        /// <returns></returns>
+        private string CheckRayDodge()
+        {
+            RaycastHit rayKnee;
+            RaycastHit rayBody;
+
+            isHitBody = false;
+            isHitKnee = false;
+            
+            //Check if raycast from body hits geometry
+            if (Physics.Raycast(hitBody.transform.position, hitKnee.transform.forward,
+                out rayBody, 3f))
+            {
+                if (rayBody.transform.tag == "Geometry")
+                {
+                    isHitBody = true;//Record true if raycast hits geometry
+                }
+            }
+
+            //Chec if raycast from knee hits geometry
+            if(Physics.Raycast(hitKnee.transform.position, hitKnee.transform.forward,
+                out rayKnee, 3f))
+            {
+                if (rayKnee.transform.tag == "Geometry")
+                {
+                    isHitKnee = true;//Record true if raycast hits geometry
+                }
+            }
+
+            //If both rays hit geometry then return null.
+            //If only knee hits then return vault.
+            //IF only body hits then retun slide else return null
+            if(isHitKnee && isHitBody)
+            {
+                return null;
+            }
+            else if (isHitKnee)
+            {
+                return "Vault";
+            }
+            else if (isHitBody)
+            {
+                return "Slide";
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         private void FixedUpdate()
-        {
+        {            
             GroundCheck();
             Vector2 input = GetInput();
 
@@ -147,10 +251,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 // always move along the camera forward as it is the direction that it being aimed at
                 Vector3 desiredMove = cam.transform.forward*input.y + cam.transform.right*input.x;
                 desiredMove = Vector3.ProjectOnPlane(desiredMove, m_GroundContactNormal).normalized;
-
+                      
+                //set the movement for the main camera
                 desiredMove.x = desiredMove.x*movementSettings.CurrentTargetSpeed;
                 desiredMove.z = desiredMove.z*movementSettings.CurrentTargetSpeed;
                 desiredMove.y = desiredMove.y*movementSettings.CurrentTargetSpeed;
+
                 if (m_RigidBody.velocity.sqrMagnitude <
                     (movementSettings.CurrentTargetSpeed*movementSettings.CurrentTargetSpeed))
                 {
@@ -180,20 +286,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_RigidBody.drag = 0f;
                 if (m_PreviouslyGrounded && !m_Jumping)
                 {
-                    StickToGroundHelper();
+                    //StickToGroundHelper();
                 }
             }
             m_Jump = false;
         }
 
-
+        
         private float SlopeMultiplier()
         {
             float angle = Vector3.Angle(m_GroundContactNormal, Vector3.up);
             return movementSettings.SlopeCurveModifier.Evaluate(angle);
         }
-
-
+        
+        /*
         private void StickToGroundHelper()
         {
             RaycastHit hitInfo;
@@ -207,6 +313,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 }
             }
         }
+        */
 
 
         private Vector2 GetInput()
@@ -231,6 +338,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             float oldYRotation = transform.eulerAngles.y;
 
             mouseLook.LookRotation (transform, cam.transform);
+            mouseLookCam2.LookRotation(transform, effectsCam.transform);
 
             if (m_IsGrounded || advancedSettings.airControl)
             {

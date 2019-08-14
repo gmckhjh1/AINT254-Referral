@@ -183,6 +183,7 @@ GameObject:
   - component: {fileID: 1761217440515133982}
   - component: {fileID: 1902058248}
   - component: {fileID: 1902058249}
+  - component: {fileID: 5744023701727843457}
   m_Layer: 0
   m_Name: RigidBodyFPSController
   m_TagString: Player
@@ -398,8 +399,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   dodgeForce: 300
-  jumpForce: 40
-  dodgeAnimator: {fileID: 0}
+  jumpForce: 50
+  dodgeAnimator: {fileID: 1902058249}
 --- !u!95 &1902058249
 Animator:
   serializedVersion: 3
@@ -410,7 +411,7 @@ Animator:
   m_GameObject: {fileID: 100006}
   m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 43741cafab6ecf5488177bd27ab62e0f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3fd5f13c9098dc544a679cb7189ff2d3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -419,6 +420,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5744023701727843457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f03ce25aee22a3e499b4a5b99fe62f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &257176988
 GameObject:
   m_ObjectHideFlags: 0

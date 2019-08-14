@@ -93,5 +93,5 @@ public class SpitAttack : MonoBehaviour, IAttacks
             particleSystem.Stop();
         }
         else return;                
-    }        
+    }
 }

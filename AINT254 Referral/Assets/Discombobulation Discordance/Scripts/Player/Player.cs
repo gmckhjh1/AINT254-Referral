@@ -9,23 +9,12 @@ public class Player : MonoBehaviour, IDamageHandler
     [SerializeField] private GameObject weapon;//Weapon reference
 
     [SerializeField] private Camera mainCam;//Regular camera
+
     [SerializeField] private Camera effectsCam;//Camera reference for damage effects
     private CameraEffects shakeCam;//Reference to camEffects script
     [SerializeField] private float effectLength = 3f;
     [SerializeField] private float shakeMag = 0.02f;
-
-    //Enum, get and set for playerstate
-    public enum PlayerStates { Normal, Damaged }
-
-    public PlayerStates currState;
     
-    public PlayerStates state
-    {
-        get { return state; }
-        set { currState = value; }
-    }
-    
-
     private static Player sInstance = null;
     public static Player Instance
     {
@@ -66,19 +55,7 @@ public class Player : MonoBehaviour, IDamageHandler
             Debug.Log("No reference to cameraEffects for player damage effects");
         }
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Set player state to normal
-        currState = PlayerStates.Normal;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-              
-    }
+      
 
     /// <summary>
     /// Implement Interface TakeDamage method
@@ -92,10 +69,8 @@ public class Player : MonoBehaviour, IDamageHandler
         {
             Destroy(gameObject);
         }
-        */
-        currState = PlayerStates.Damaged;
-        DamagedEffects();
-        
+        */        
+        DamagedEffects();        
     }
 
     /// <summary>
@@ -107,19 +82,15 @@ public class Player : MonoBehaviour, IDamageHandler
         effectsCam.enabled = true;
         shakeCam.InititiateEffects(effectLength, shakeMag);
 
-        this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-                
+        this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);                
     }
 
+    /// <summary>
+    /// Return cameras to undamaged state
+    /// </summary>
     public void CamSwitchNormal()
     {
-        
-        //if (currState == PlayerStates.Normal)
-        //{
-            mainCam.enabled = true;
-            effectsCam.enabled = false;
-        //}
-        //else return;
-        
+        mainCam.enabled = true;
+        effectsCam.enabled = false;        
     }
 }

@@ -14,12 +14,11 @@ namespace EnemyFactory
         /// </summary>
         string Name { get; }
         Player Player { get; }
-        StateMachine StateMachine { get; }
         int Health { get; }
-        void CurrState();
+        void GetStateAction();
+        void StartState();
         void Attack();
-        void ReturnToPool();
-        void InitialiseStateMachine();
+        void ReturnToPool();        
     }
        
 }

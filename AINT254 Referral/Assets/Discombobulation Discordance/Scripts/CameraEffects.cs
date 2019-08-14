@@ -58,8 +58,7 @@ public class CameraEffects : MonoBehaviour
 
         Blink();
         yield return new WaitForSeconds(.3f);
-
-        Player.Instance.currState = Player.PlayerStates.Normal;//Set player state back to normal
+               
         Player.Instance.CamSwitchNormal();//Switch back to normal view
 
         effectTriggered = false;

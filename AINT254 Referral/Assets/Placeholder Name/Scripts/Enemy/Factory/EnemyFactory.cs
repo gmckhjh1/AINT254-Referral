@@ -14,10 +14,10 @@ namespace EnemyFactory
     public static class EnemyFactory
     {
         
-        private static IEnumerable<Type> implementedEnemies;//Implemented types of enemies
-        private static bool isInitialised => implementedEnemies != null;//Validation variable
-        private static List<string> enemiesByName = new List<string>();//Dictionary for enemy names
-        private static List<GameObject> allEnemies = new List<GameObject>(); //Store list of gameobjects created by factory
+        private static IEnumerable<Type> m_implementedEnemies;//Implemented types of enemies
+        private static bool isInitialised => m_implementedEnemies != null;//Validation variable
+        private static List<string> m_enemiesByName = new List<string>();//Dictionary for enemy names
+        private static List<GameObject> m_allEnemies = new List<GameObject>(); //Store list of gameobjects created by factory
 
         /// <summary>
         /// Automactically get all types of enemy.
@@ -40,12 +40,12 @@ namespace EnemyFactory
             Type[] enemyTypes = assembly.GetTypes();
 
             //determine which types implement the parent Interface and store them
-            implementedEnemies = enemyTypes.Where(t => t.GetInterfaces().Contains(parentType));
+            m_implementedEnemies = enemyTypes.Where(t => t.GetInterfaces().Contains(parentType));
                         
             //Select each enemytype and store name 
-            foreach(var type in implementedEnemies)
+            foreach(var type in m_implementedEnemies)
             {                
-                enemiesByName.Add(type.Name);
+                m_enemiesByName.Add(type.Name);
             }
         }
                 
@@ -65,16 +65,16 @@ namespace EnemyFactory
             //If there are enemy types loop through and find 
             //Prefabs with the script in the resources folder
             //Ensures any new  tyes added will be automatically added.
-            if (enemiesByName != null)
+            if (m_enemiesByName != null)
             {
 
-                for(int i = 0; i < enemiesByName.Count(); i++)
+                for(int i = 0; i < m_enemiesByName.Count(); i++)
                 {
-                    GameObject temp = (Resources.Load(enemiesByName[i]) as GameObject);                   
-                    allEnemies.Add(temp);                    
+                    GameObject temp = (Resources.Load(m_enemiesByName[i]) as GameObject);                   
+                    m_allEnemies.Add(temp);                    
                 }
                 
-                return allEnemies;
+                return m_allEnemies;
 
             } else return null;                       
         }                                         

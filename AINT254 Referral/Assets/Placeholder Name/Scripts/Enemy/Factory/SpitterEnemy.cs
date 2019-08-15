@@ -13,11 +13,11 @@ namespace EnemyFactory
     public class SpitterEnemy : MonoBehaviour, IEnemy, IDamageHandler
     {
         //Basic variables for this enemy type implemented from IEnemy
-        [SerializeField] private int health = 10;             
+        [SerializeField] private int m_health = 10;             
         public string Name => "SpitterEnemy";
         public int Health
         {
-            get { return health; }
+            get { return m_health; }
             private set { Health = value; }
         }
         
@@ -28,18 +28,18 @@ namespace EnemyFactory
         public Player Player => Player.Instance;
 
         //Serialized references to attack features
-        [SerializeField] private Animation attackAnim;
-        [SerializeField] private SpitAttack weapon;
-        [SerializeField] private Transform lineOfSight;
-        [SerializeField] private ParticleSystem death;
+        [SerializeField] private Animation m_attackAnim;
+        [SerializeField] private SpitAttack m_weapon;
+        [SerializeField] private Transform m_lineOfSight;
+        [SerializeField] private ParticleSystem m_death;
 
         //Variables for state machine
-        private EnemyState currentState;
+        private EnemyState m_currentState;
 
         //Private variables for state selection
         private NavMeshAgent m_navAgent;
-        private float rangeAttackDistance = 5f;
-        private bool hasLineOfSight = false;
+        private float m_rangeAttackDistance = 5f;
+        private bool m_hasLineOfSight = false;
 
         void Start()
         {
@@ -74,7 +74,7 @@ namespace EnemyFactory
         /// </summary>
         public void StartState()
         {
-            currentState = EnemyState.Chase;
+            m_currentState = EnemyState.Chase;
         }
         
         /// <summary>
@@ -82,7 +82,7 @@ namespace EnemyFactory
         /// </summary>
         public void GetStateAction()
         {
-            switch (currentState)
+            switch (m_currentState)
             {
                 case EnemyState.Chase:
                     ChasePlayer();
@@ -100,9 +100,9 @@ namespace EnemyFactory
 
         private void ChasePlayer()
         {
-            hasLineOfSight = CheckLineOfSight();
+            m_hasLineOfSight = CheckLineOfSight();
 
-            if (Vector3.Distance(transform.position, Player.transform.position) > rangeAttackDistance || !hasLineOfSight)
+            if (Vector3.Distance(transform.position, Player.transform.position) > m_rangeAttackDistance || !m_hasLineOfSight)
             {                
                 m_navAgent.enabled = true;
                 m_navAgent.destination = Player.transform.position;
@@ -110,7 +110,7 @@ namespace EnemyFactory
             else
             {
                 m_navAgent.enabled = false;
-                currentState = EnemyState.Attack;
+                m_currentState = EnemyState.Attack;
             }
         }
         
@@ -120,16 +120,16 @@ namespace EnemyFactory
         /// </summary>
         public void Attack()
         {
-            hasLineOfSight = CheckLineOfSight();
+            m_hasLineOfSight = CheckLineOfSight();
 
-            if (Vector3.Distance(transform.position, Player.transform.position) < rangeAttackDistance && hasLineOfSight)
+            if (Vector3.Distance(transform.position, Player.transform.position) < m_rangeAttackDistance && m_hasLineOfSight)
             {                
-                weapon.StartAttack();                
+                m_weapon.StartAttack();                
             }
             else
             {                
-                weapon.StopAttack();
-                currentState = EnemyState.Chase;
+                m_weapon.StopAttack();
+                m_currentState = EnemyState.Chase;
             }
         }
 
@@ -137,8 +137,8 @@ namespace EnemyFactory
         {
             RaycastHit checkSight;
 
-            if (Physics.Raycast(lineOfSight.transform.position, lineOfSight.transform.forward,
-                out checkSight, rangeAttackDistance))
+            if (Physics.Raycast(m_lineOfSight.transform.position, m_lineOfSight.transform.forward,
+                out checkSight, m_rangeAttackDistance))
             {
                 if (checkSight.transform.tag == "Player")
                 {
@@ -153,8 +153,8 @@ namespace EnemyFactory
         /// </summary>
         public void ReturnToPool()
         {
-            death.transform.position = transform.position;
-            death.Play();//Play death particle effect
+            m_death.transform.position = transform.position;
+            m_death.Play();//Play death particle effect
 
             gameObject.SetActive(false);
             EnemyPool.EnemyObjectPool.Instance.ReturnToPool(this.gameObject);
@@ -164,16 +164,16 @@ namespace EnemyFactory
         /// Implement the interface methd to take damage.
         /// Set gameobject to inactive when dead call ReturnToPool()
         /// </summary>
-        /// <param name="Damage"></param>
-        public void TakeDamage(int Damage, GameObject attackingEnemy)
+        /// <param name="_Damage"></param>
+        public void TakeDamage(int _Damage, GameObject _attackingEnemy)
         {
-            health -= Damage;
+            m_health -= _Damage;
 
-            if(health <= 0)
+            if(m_health <= 0)
             {
                 gameObject.SetActive(false);
-                death.transform.position = gameObject.transform.position;
-                death.Play();                
+                m_death.transform.position = gameObject.transform.position;
+                m_death.Play();                
                 ReturnToPool();
             }
         }

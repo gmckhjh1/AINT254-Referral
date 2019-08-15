@@ -1,14 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DeathZone : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider _other)
     {
         try
         {
-            Destroy(other.gameObject);
+            if(_other.tag == "Player")
+            {
+                SceneManager.LoadScene("GameOver");
+            }
+            else
+            {
+                Destroy(_other.gameObject);
+            }
+
         }
         catch
         {

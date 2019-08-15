@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//
+//Class to handle all UI data
+//
 public class UIManager : MonoBehaviour
-{
-    //
-    //Class to handle all UI data
-    //
+{   
 
     [SerializeField] private float m_timer = 60.0f;
 

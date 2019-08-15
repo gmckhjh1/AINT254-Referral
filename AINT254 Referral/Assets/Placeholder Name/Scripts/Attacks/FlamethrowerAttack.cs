@@ -2,29 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//
+//A flamethrower weapon that implements attacks interface
+//
 public class FlamethrowerAttack : MonoBehaviour
 {
-    [SerializeField] private int attackPower = 5;//Set attack power
-    [SerializeField] private float attackReload = 3f;//Set wait time between attacks
-    [SerializeField] private float attackLength = 2f;//Set length of attack
-    [SerializeField] private ParticleSystem particleSystem;//Particle system ref
+    [SerializeField] private int m_attackPower = 5;//Set attack power
+    [SerializeField] private float m_attackReload = 3f;//Set wait time between attacks
+    [SerializeField] private float m_attackLength = 2f;//Set length of attack
+    [SerializeField] ParticleSystem m_particleSystem;//Particle system ref
     Coroutine lastCoroutine;
 
     public int AttackPower
     {
-        get { return attackPower; }
-        private set { attackPower = value; }
+        get { return m_attackPower; }
+        private set { m_attackPower = value; }
     }
 
     public float AttackReload
     {
-        get { return attackReload; }
-        private set { attackReload = value; }
+        get { return m_attackReload; }
+        private set { m_attackReload = value; }
     }
 
     private void Start()
     {
-        particleSystem.GetComponent<ParticleSystem>();
+       // m_particleSystem.GetComponent<ParticleSystem>();
     }
 
     /// <summary>
@@ -32,7 +35,7 @@ public class FlamethrowerAttack : MonoBehaviour
     /// </summary>
     public void StartAttack()
     {
-        particleSystem.Play();
+        m_particleSystem.Play();
     }
 
     /// <summary>
@@ -41,30 +44,30 @@ public class FlamethrowerAttack : MonoBehaviour
     /// </summary>
     public void StopAttack()
     {
-        particleSystem.Stop();
+        m_particleSystem.Stop();
     }
     
     /// <summary>
     /// If particle system collides with player then deal damage 
     /// using the IDamageHandler. Turn off particle system. 
     /// </summary>
-    /// <param name="other"></param>
+    /// <param name="m_other"></param>
 
-    private void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject m_other)
     {
         Debug.Log("in particle collision method");
         
-        if (other.tag == "Enemy")
+        if (m_other.tag == "Enemy")
         {
-            Debug.Log(other);
+            Debug.Log(m_other);
             //Call IDamageHandler
-            IDamageHandler canTakeDamage = other.GetComponent<IDamageHandler>();
+            IDamageHandler canTakeDamage = m_other.GetComponent<IDamageHandler>();
             if (canTakeDamage != null)
             {
-                canTakeDamage.TakeDamage(attackPower, transform.parent.gameObject);
+                canTakeDamage.TakeDamage(m_attackPower, transform.parent.gameObject);
             }
 
-            particleSystem.Stop();
+            m_particleSystem.Stop();
         }
         else return;
     }

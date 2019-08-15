@@ -164,7 +164,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if(CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.x > 0)
             {                
                 m_dodgeController.StartDodge("Right");
-                Debug.Log("Controller triggering dodge right");
             }
             else if(CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.x < 0)
             {

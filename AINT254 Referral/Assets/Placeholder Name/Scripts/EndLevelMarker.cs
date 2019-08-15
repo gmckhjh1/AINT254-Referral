@@ -50,10 +50,10 @@ public class EndLevelMarker : MonoBehaviour
     /// If player enters the collider then
     /// inform GameManager to end level
     /// </summary>
-    /// <param name="other"></param>
-    private void OnTriggerEnter(Collider other)
+    /// <param name="_other"></param>
+    private void OnTriggerEnter(Collider _other)
     {
-        if(other.tag == "Player")
+        if(_other.tag == "Player")
         {           
             GameManager.PlayerReachedEndLevel();
         }       

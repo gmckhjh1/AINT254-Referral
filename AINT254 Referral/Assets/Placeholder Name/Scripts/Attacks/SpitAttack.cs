@@ -8,27 +8,27 @@ using System;
 //
 public class SpitAttack : MonoBehaviour, IAttacks
 {
-    [SerializeField] private int attackPower = 5;//Set attack power
-    [SerializeField] private float attackReload = 3f;//Set wait time between attacks
-    [SerializeField] private float attackLength = 2f;//Set length of attack
-    [SerializeField] private ParticleSystem particleSystem;//Particle system ref
+    [SerializeField] private int m_attackPower = 5;//Set attack power
+    [SerializeField] private float m_attackReload = 4f;//Set wait time between attacks
+    [SerializeField] private float m_attackLength = .5f;//Set length of attack
+    [SerializeField] private ParticleSystem m_particleSystem;//Particle system ref
     Coroutine lastCoroutine;
 
     public int AttackPower
     {
-        get { return attackPower; }
-        private set { attackPower = value; }
+        get { return m_attackPower; }
+        private set { m_attackPower = value; }
     }
 
     public float AttackReload
     {
-        get { return attackReload; }
-        private set { attackReload = value; }
+        get { return m_attackReload; }
+        private set { m_attackReload = value; }
     }
 
     private void Start()
     {
-        particleSystem.GetComponent<ParticleSystem>();
+        m_particleSystem.GetComponent<ParticleSystem>();
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class SpitAttack : MonoBehaviour, IAttacks
         if (lastCoroutine != null)
         {
             StopCoroutine(lastCoroutine);
-            particleSystem.Stop();
+            m_particleSystem.Stop();
         }
         else return;
     }
@@ -60,12 +60,12 @@ public class SpitAttack : MonoBehaviour, IAttacks
     /// <returns></returns>
     IEnumerator Attacking()
     {
-        Debug.Log("Is attacking");
-        particleSystem.Play();
-        yield return new WaitForSeconds(attackLength);
+        
+        m_particleSystem.Play();
+        yield return new WaitForSeconds(m_attackLength);
 
-        particleSystem.Stop();        
-        yield return new WaitForSeconds(attackReload);
+        m_particleSystem.Stop();        
+        yield return new WaitForSeconds(m_attackReload);
 
         StartAttack();
     }
@@ -74,23 +74,20 @@ public class SpitAttack : MonoBehaviour, IAttacks
     /// If particle system collides with player then deal damage 
     /// using the IDamageHandler. Turn off particle system. 
     /// </summary>
-    /// <param name="other"></param>
+    /// <param name="_other"></param>
     
-    private void OnParticleCollision(GameObject other)
-    {
-        Debug.Log("In collision ");
-        
-        Debug.Log(other);
-        if (other.tag == "Player")
+    private void OnParticleCollision(GameObject _other)
+    {        
+        if (_other.tag == "Player")
         {
             //Call IDamageHandler
-            IDamageHandler canTakeDamage = other.GetComponent<IDamageHandler>();
+            IDamageHandler canTakeDamage = _other.GetComponent<IDamageHandler>();
             if(canTakeDamage != null)
             {
-                canTakeDamage.TakeDamage(attackPower, transform.parent.gameObject);
+                canTakeDamage.TakeDamage(m_attackPower, transform.parent.gameObject);
             }
                         
-            particleSystem.Stop();
+            m_particleSystem.Stop();
         }
         else return;                
     }

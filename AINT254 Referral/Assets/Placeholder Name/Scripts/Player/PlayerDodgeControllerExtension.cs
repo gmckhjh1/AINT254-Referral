@@ -9,16 +9,16 @@ public class PlayerDodgeControllerExtension : MonoBehaviour
     //consistency with the RBFPController.
 
     [SerializeField] public AnimationCurve jumpX, jumpY;
-    private Vector3 dodgeLeft;
-    private Vector3 dodgeRight;
-    [SerializeField] float dodgeForce = 10.0f;
-    [SerializeField] float jumpForce = 10.0f;
-    [SerializeField] private Animator dodgeAnimator;
-    private Rigidbody body;
+    private Vector3 m_dodgeLeft;
+    private Vector3 m_dodgeRight;
+    [SerializeField] private float m_dodgeForce = 10.0f;
+    [SerializeField] private float m_jumpForce = 10.0f;
+    [SerializeField] public Animator dodgeAnimator;
+    private Rigidbody m_body;
 
     private void Start()
     {
-        body = GetComponent<Rigidbody>();
+        m_body = GetComponent<Rigidbody>();
         //dodgeAnimator = GetComponent<Animator>();
         dodgeAnimator.enabled = false;
     }
@@ -27,12 +27,12 @@ public class PlayerDodgeControllerExtension : MonoBehaviour
     /// Call appropriate dodge method based on parameter
     /// passed from calling class.
     /// </summary>
-    /// <param name="dodgeType"></param>
-    public void StartDodge(String dodgeType)
+    /// <param name="_dodgeType"></param>
+    public void StartDodge(String _dodgeType)
     {
         try
         {
-            switch (dodgeType)
+            switch (_dodgeType)
             {
                 case "Left":
                     DodgeLeft();
@@ -72,9 +72,9 @@ public class PlayerDodgeControllerExtension : MonoBehaviour
     /// </summary>
     private void DodgeRight()
     {
-        body.drag = 0f;
-        body.AddRelativeForce(new Vector3(dodgeForce, 0f, 0f), ForceMode.Impulse);
-        body.drag = 5f;
+        m_body.drag = 0f;
+        m_body.AddRelativeForce(new Vector3(m_dodgeForce, 0f, 0f), ForceMode.Impulse);
+        m_body.drag = 5f;
     }
 
     /// <summary>
@@ -83,9 +83,9 @@ public class PlayerDodgeControllerExtension : MonoBehaviour
     /// </summary>
     private void DodgeLeft()
     {
-        body.drag = 0f;
-        body.AddRelativeForce(new Vector3(-dodgeForce, 0f, 0f), ForceMode.Impulse);
-        body.drag = 5f;
+        m_body.drag = 0f;
+        m_body.AddRelativeForce(new Vector3(-m_dodgeForce, 0f, 0f), ForceMode.Impulse);
+        m_body.drag = 5f;
     }
 
     /// <summary>
@@ -93,9 +93,9 @@ public class PlayerDodgeControllerExtension : MonoBehaviour
     /// </summary>
     private void Leap()
     {
-        body.drag = 0f;
-        body.AddRelativeForce(new Vector3(0f, jumpForce, (dodgeForce / 4)), ForceMode.Impulse);
-        body.drag = 5f;
+        m_body.drag = 0f;
+        m_body.AddRelativeForce(new Vector3(0f, m_jumpForce, (m_dodgeForce / 4)), ForceMode.Impulse);
+        m_body.drag = 5f;
     }
 
     /// <summary>

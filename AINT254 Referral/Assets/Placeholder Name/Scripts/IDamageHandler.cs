@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDamageHandler
 {
-    void TakeDamage(int damage, GameObject attackingObject);
+    void TakeDamage(int _damage, GameObject _attackingObject);
 }

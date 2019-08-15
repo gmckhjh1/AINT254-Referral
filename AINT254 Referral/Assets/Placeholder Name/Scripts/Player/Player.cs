@@ -7,18 +7,18 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class Player : MonoBehaviour, IDamageHandler
 {
     //Basic player references
-    [SerializeField] private int health = 50;//Player health before death
-    [SerializeField] private FlamethrowerAttack weapon;//Weapon reference
+    [SerializeField] private int m_health = 50;//Player health before death
+    [SerializeField] private FlamethrowerAttack m_weapon;//Weapon reference
 
     //Damage effects references and variables
-    [SerializeField] private Camera mainCam;//Regular camera
-    [SerializeField] private Camera effectsCam;//Camera reference for damage effects
-    private CameraEffects shakeCam;//Reference to camEffects script
-    [SerializeField] private float effectLength = 3f;
-    [SerializeField] private float shakeMag = 0.02f;
+    [SerializeField] private Camera m_mainCam;//Regular camera
+    [SerializeField] private Camera m_effectsCam;//Camera reference for damage effects
+    private CameraEffects m_shakeCam;//Reference to camEffects script
+    [SerializeField] private float m_effectLength = 3f;
+    [SerializeField] private float m_shakeMag = 0.02f;
 
     //Reference to the controller script
-    private RigidbodyFirstPersonController controller;
+    private RigidbodyFirstPersonController m_controller;
 
     //Singleton player 
     private static Player sInstance = null;
@@ -49,21 +49,21 @@ public class Player : MonoBehaviour, IDamageHandler
             enabled = false;
         }
         
-        /*
+        
         //Try to get cameraEffects script attached to effectCam
         try
         {
-            shakeCam = effectsCam.GetComponent<CameraEffects>();
+            m_shakeCam = m_effectsCam.GetComponent<CameraEffects>();
         }
         catch
         {
             Debug.Log("No reference to cameraEffects for player damage effects");
         }
-        */
+        
 
         try
         {
-            controller = GetComponent<RigidbodyFirstPersonController>();
+            m_controller = GetComponent<RigidbodyFirstPersonController>();
         }
         catch
         {
@@ -76,16 +76,24 @@ public class Player : MonoBehaviour, IDamageHandler
     /// Implement Interface TakeDamage method.
     /// Select how player is damaged based on type of enemy.
     /// </summary>
-    /// <param name="damage"></param>
-    public void TakeDamage(int damage, GameObject attackingObject)
+    /// <param name="_damage"></param>
+    public void TakeDamage(int _damage, GameObject _attackingObject)
     {        
-        switch (attackingObject.name)
+        switch (_attackingObject.name)
         {
             case "SpitterEnemy":
                 DamagedEffectsSpitter();
                 break;
 
+            case "SpitterEnemy(Clone)":
+                DamagedEffectsSpitter();
+                break;
+
             case "DiscombobulateEnemy":
+                DamagedEffectsDiscombob();
+                break;
+
+            case "DiscombobulateEnemy(Clone)":
                 DamagedEffectsDiscombob();
                 break;
 
@@ -100,9 +108,9 @@ public class Player : MonoBehaviour, IDamageHandler
     /// </summary>
     private void DamagedEffectsSpitter()
     {        
-        mainCam.enabled = false;
-        effectsCam.enabled = true;
-        shakeCam.InititiateEffects(effectLength, shakeMag);
+        m_mainCam.enabled = false;
+        m_effectsCam.enabled = true;
+        m_shakeCam.InititiateEffects(m_effectLength, m_shakeMag);
 
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);                
     }
@@ -112,7 +120,7 @@ public class Player : MonoBehaviour, IDamageHandler
     /// </summary>
     private void DamagedEffectsDiscombob()
     {
-        controller.InitiateDamageEffects();
+        m_controller.InitiateDamageEffects();
     }
 
     /// <summary>
@@ -120,8 +128,8 @@ public class Player : MonoBehaviour, IDamageHandler
     /// </summary>
     public void CamSwitchNormal()
     {
-        mainCam.enabled = true;
-        effectsCam.enabled = false;        
+        m_mainCam.enabled = true;
+        m_effectsCam.enabled = false;        
     }
 
    /// <summary>
@@ -129,7 +137,7 @@ public class Player : MonoBehaviour, IDamageHandler
    /// </summary>
     public void StartAttack()
     {
-        weapon.StartAttack();
+        m_weapon.StartAttack();
     }
 
     /// <summary>
@@ -137,6 +145,6 @@ public class Player : MonoBehaviour, IDamageHandler
     /// </summary>
     public void StopAttack()
     {
-        weapon.StopAttack();
+        m_weapon.StopAttack();
     }
 }

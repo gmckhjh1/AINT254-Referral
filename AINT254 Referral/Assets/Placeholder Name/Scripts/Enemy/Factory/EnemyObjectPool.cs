@@ -33,7 +33,7 @@ namespace EnemyPool
         //Queue to store pooled enemyObjs
         //Random objects usually selected due to potential different enemy types
         //but Queue still in use in case of later change
-        private Queue<GameObject> pooledEnemiesAvailable = new Queue<GameObject>();
+        private List<GameObject> pooledEnemiesAvailable = new List<GameObject>();
 
         // Start is called before the first frame update
         void Start()
@@ -84,7 +84,8 @@ namespace EnemyPool
             GameObject spawnEnemy;
             if(pooledEnemiesAvailable != null)
             {
-                spawnEnemy = RandEnemyHelper();
+                spawnEnemy = RandEnemyHelper() as GameObject;
+                pooledEnemiesAvailable.Remove(spawnEnemy);
                 return spawnEnemy;
             }
             else
@@ -105,19 +106,19 @@ namespace EnemyPool
 
             //Instantiate and disable
             Instantiate(enemy, transform.position, transform.rotation);            
-            enemy.SetActive(false);
+            //enemy.SetActive(false);
 
             //Add to pool and return
-            pooledEnemiesAvailable.Enqueue(enemy);
+            pooledEnemiesAvailable.Add(enemy);
         }
 
         /// <summary>
         /// Return Gameobject to pool
         /// </summary>
-        /// <param name="enemy"></param>
-        public void ReturnToPool(GameObject enemy)
+        /// <param name="m_enemy"></param>
+        public void ReturnToPool(GameObject m_enemy)
         {
-            pooledEnemiesAvailable.Enqueue(enemy);
+            pooledEnemiesAvailable.Add(m_enemy);
         }
                 
         /// <summary>
@@ -126,7 +127,7 @@ namespace EnemyPool
         /// <returns></returns>
         private GameObject RandEnemyHelper()
         {
-            return enemies[rand.Next(0, enemies.Count)];
+            return enemies[rand.Next(0, enemies.Count)] as GameObject;
         }
     }
 }

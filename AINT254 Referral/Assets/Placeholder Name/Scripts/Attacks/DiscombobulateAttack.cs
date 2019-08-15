@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+//
+//An attack that implements attacks interface
+//
 public class DiscombobulateAttack : MonoBehaviour
 {
-    [SerializeField] private int attackPower = 5;//Set attack power
-    [SerializeField] private float attackReload = 3f;//Set wait time between attacks
-    [SerializeField] private float attackLength = 2f;//Set length of attack
-    [SerializeField] private ParticleSystem particleSystem;//Particle system ref
+    [SerializeField] private int m_attackPower = 5;//Set attack power
+    [SerializeField] private float m_attackReload = 3f;//Set wait time between attacks
+    [SerializeField] private float m_attackLength = .5f;//Set length of attack
+    [SerializeField] private ParticleSystem m_particleSystem;//Particle system ref
     Coroutine lastCoroutine;
 
     public int AttackPower
     {
-        get { return attackPower; }
-        private set { attackPower = value; }
+        get { return m_attackPower; }
+        private set { m_attackPower = value; }
     }
 
     public float AttackReload
     {
-        get { return attackReload; }
-        private set { attackReload = value; }
+        get { return m_attackReload; }
+        private set { m_attackReload = value; }
     }
 
     private void Start()
     {
-        particleSystem.GetComponent<ParticleSystem>();
+        m_particleSystem.GetComponent<ParticleSystem>();
     }
 
     /// <summary>
@@ -45,7 +48,7 @@ public class DiscombobulateAttack : MonoBehaviour
         if (lastCoroutine != null)
         {
             StopCoroutine(lastCoroutine);
-            particleSystem.Stop();
+            m_particleSystem.Stop();
         }
         else return;
     }
@@ -57,11 +60,11 @@ public class DiscombobulateAttack : MonoBehaviour
     /// <returns></returns>
     IEnumerator Attacking()
     {
-        particleSystem.Play();
-        yield return new WaitForSeconds(attackLength);
+        m_particleSystem.Play();
+        yield return new WaitForSeconds(m_attackLength);
 
-        particleSystem.Stop();
-        yield return new WaitForSeconds(attackReload);
+        m_particleSystem.Stop();
+        yield return new WaitForSeconds(m_attackReload);
 
         StartAttack();
     }
@@ -70,24 +73,24 @@ public class DiscombobulateAttack : MonoBehaviour
     /// If particle system collides with player then deal damage 
     /// using the IDamageHandler. Turn off particle system. 
     /// </summary>
-    /// <param name="other"></param>
+    /// <param name="m_other"></param>
 
-    private void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject m_other)
     {
         
-        if (other.tag == "Player")
+        if (m_other.tag == "Player")
         {
             //Call IDamageHandler
-            IDamageHandler canTakeDamage = other.GetComponent<IDamageHandler>();
+            IDamageHandler canTakeDamage = m_other.GetComponent<IDamageHandler>();
             if (canTakeDamage != null)
             {
-                canTakeDamage.TakeDamage(attackPower, transform.parent.gameObject);
+                canTakeDamage.TakeDamage(m_attackPower, transform.parent.gameObject);
             }
 
             //Add force to player collider to knock them backwardss
-            other.gameObject.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(-5f, 0f, 0f), ForceMode.Impulse);
+            m_other.gameObject.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(-5f, 0f, 0f), ForceMode.Impulse);
             
-            particleSystem.Stop();//Turn off particle system
+            m_particleSystem.Stop();//Turn off particle system
         }
         else return;
     }

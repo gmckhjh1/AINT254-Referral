@@ -57,7 +57,6 @@ public class DiscombobulateAttack : MonoBehaviour
     /// <returns></returns>
     IEnumerator Attacking()
     {
-        Debug.Log("Is attacking");
         particleSystem.Play();
         yield return new WaitForSeconds(attackLength);
 
@@ -75,9 +74,7 @@ public class DiscombobulateAttack : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log("In collision ");
-
-        Debug.Log(other);
+        
         if (other.tag == "Player")
         {
             //Call IDamageHandler
@@ -89,8 +86,7 @@ public class DiscombobulateAttack : MonoBehaviour
 
             //Add force to player collider to knock them backwardss
             other.gameObject.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(-5f, 0f, 0f), ForceMode.Impulse);
-            //Turn on damage effect panel
-
+            
             particleSystem.Stop();//Turn off particle system
         }
         else return;

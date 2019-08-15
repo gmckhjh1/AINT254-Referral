@@ -148,7 +148,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             RotateView();
             m_dodgeInput = GetInput();
-            
+
+            //If user presses fire then call player attack method
+            if (CrossPlatformInputManager.GetButton("Fire1"))
+            {
+                Player.Instance.StartAttack();
+            }
+            else
+            {
+                Player.Instance.StopAttack();
+            }
+
             //Call appropriate methods from PlayerDodgeControllerExtension
             //based on the input from the player.
             if(CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.x > 0)
@@ -322,7 +332,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_RigidBody.drag = 0f;
                 if (m_PreviouslyGrounded && !m_Jumping)
                 {
-                    //StickToGroundHelper();
+                    StickToGroundHelper();
                 }
             }
             m_Jump = false;
@@ -335,7 +345,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             return movementSettings.SlopeCurveModifier.Evaluate(angle);
         }
         
-        /*
+        
         private void StickToGroundHelper()
         {
             RaycastHit hitInfo;
@@ -349,7 +359,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 }
             }
         }
-        */
+        
 
 
         private Vector2 GetInput()

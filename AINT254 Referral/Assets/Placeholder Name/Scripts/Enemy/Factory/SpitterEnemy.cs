@@ -167,12 +167,13 @@ namespace EnemyFactory
         /// <param name="Damage"></param>
         public void TakeDamage(int Damage, GameObject attackingEnemy)
         {
-            Health -= Damage;
+            health -= Damage;
 
-            if(Health <= 0)
+            if(health <= 0)
             {
                 gameObject.SetActive(false);
-
+                death.transform.position = gameObject.transform.position;
+                death.Play();                
                 ReturnToPool();
             }
         }

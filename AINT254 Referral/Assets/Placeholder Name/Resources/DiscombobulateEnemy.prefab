@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6090684281859165107
 Transform:
   m_ObjectHideFlags: 0
@@ -324,16 +324,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5010096283259903428, guid: d5f752f190cdf6743b9d94c0a9416f98,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5010096283259903428, guid: d5f752f190cdf6743b9d94c0a9416f98,
-        type: 3}
-      propertyPath: CollisionModule.collisionMessages
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7824698535235087527, guid: d5f752f190cdf6743b9d94c0a9416f98,
         type: 3}
       propertyPath: attackReload
@@ -349,6 +339,16 @@ PrefabInstance:
       propertyPath: particleSystem
       value: 
       objectReference: {fileID: 5988441607801341883}
+    - target: {fileID: 5010096283259903428, guid: d5f752f190cdf6743b9d94c0a9416f98,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010096283259903428, guid: d5f752f190cdf6743b9d94c0a9416f98,
+        type: 3}
+      propertyPath: CollisionModule.collisionMessages
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5f752f190cdf6743b9d94c0a9416f98, type: 3}
 --- !u!4 &5884636678540897823 stripped

@@ -198,6 +198,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {                
                 return;
             }
+
+            if (Input.GetKey(KeyCode.Backspace))
+            {
+                Application.Quit();
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
         }
 
         public void InitiateDamageEffects()

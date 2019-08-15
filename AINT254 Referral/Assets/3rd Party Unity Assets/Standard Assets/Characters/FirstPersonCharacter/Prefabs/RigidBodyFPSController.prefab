@@ -399,7 +399,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   dodgeForce: 300
-  jumpForce: 60
+  jumpForce: 300
   dodgeAnimator: {fileID: 1902058249}
 --- !u!95 &1902058249
 Animator:

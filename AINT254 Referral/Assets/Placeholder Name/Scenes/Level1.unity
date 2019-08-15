@@ -223,6 +223,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpitterEnemy (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4377460916085015805, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4371731044228720835, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -306,6 +311,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpitterEnemy (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377460916085015805, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4371731044228720835, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
         type: 3}
@@ -405,7 +415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &148037630
 Transform:
   m_ObjectHideFlags: 0
@@ -744,6 +754,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpitterEnemy (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377460916085015805, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4371731044228720835, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
         type: 3}
@@ -1909,6 +1924,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpitterEnemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4377460916085015805, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4371731044228720835, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2032,7 +2052,7 @@ Transform:
   m_GameObject: {fileID: 1527712211}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.68, y: -2.8, z: 0}
-  m_LocalScale: {x: 100, y: 3.38, z: 100}
+  m_LocalScale: {x: 400, y: 3.38, z: 400}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -2278,11 +2298,6 @@ PrefabInstance:
       propertyPath: damageEffectPanel
       value: 
       objectReference: {fileID: 8327403671195035981}
-    - target: {fileID: 1761217440515133982, guid: c6453f8e1f814744d8b94e5a6d1f9942,
-        type: 3}
-      propertyPath: weapon
-      value: 
-      objectReference: {fileID: 1714585774}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
 --- !u!4 &1641555407 stripped
@@ -2291,18 +2306,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 663324021}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1714585774 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1859422783117953575, guid: c6453f8e1f814744d8b94e5a6d1f9942,
-    type: 3}
-  m_PrefabInstance: {fileID: 1588985510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05d5d8dad5fdc124498d8a3897e0239a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1732023287
 GameObject:
   m_ObjectHideFlags: 0
@@ -2808,11 +2811,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DiscombobulateEnemy
       objectReference: {fileID: 0}
-    - target: {fileID: 6093980180700653453, guid: 5e86affb65076ca4f865db0fee636838,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6090684281859165107, guid: 5e86affb65076ca4f865db0fee636838,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2881,6 +2879,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpitterEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377460916085015805, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4371731044228720835, guid: 3d25b6ddb36e2f24ba4877f0dd3b1e59,
         type: 3}
@@ -3010,16 +3013,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4511705523785905365, guid: b9f5838ff5ee5e541a76ab88f8d6d9c6,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8327403670279778457, guid: b9f5838ff5ee5e541a76ab88f8d6d9c6,
-        type: 3}
-      propertyPath: m_timer
-      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9f5838ff5ee5e541a76ab88f8d6d9c6, type: 3}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Rendering.PostProcessing;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class Player : MonoBehaviour, IDamageHandler
 {
@@ -9,11 +10,12 @@ public class Player : MonoBehaviour, IDamageHandler
     [SerializeField] private GameObject weapon;//Weapon reference
 
     [SerializeField] private Camera mainCam;//Regular camera
-
     [SerializeField] private Camera effectsCam;//Camera reference for damage effects
     private CameraEffects shakeCam;//Reference to camEffects script
     [SerializeField] private float effectLength = 3f;
     [SerializeField] private float shakeMag = 0.02f;
+
+    private RigidbodyFirstPersonController controller;
     
     private static Player sInstance = null;
     public static Player Instance
@@ -42,9 +44,7 @@ public class Player : MonoBehaviour, IDamageHandler
         {
             enabled = false;
         }
-
         
-
         //Try to get cameraEffects script attached to effectCam
         try
         {
@@ -54,6 +54,15 @@ public class Player : MonoBehaviour, IDamageHandler
         {
             Debug.Log("No reference to cameraEffects for player damage effects");
         }
+
+        try
+        {
+            controller = GetComponent<RigidbodyFirstPersonController>();
+        }
+        catch
+        {
+            Debug.Log("No FPSController reference for dmage effects");
+        }
     }
       
 
@@ -61,7 +70,7 @@ public class Player : MonoBehaviour, IDamageHandler
     /// Implement Interface TakeDamage method
     /// </summary>
     /// <param name="damage"></param>
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, GameObject attackingObject)
     {
         /*
         health -= damage;
@@ -69,20 +78,40 @@ public class Player : MonoBehaviour, IDamageHandler
         {
             Destroy(gameObject);
         }
-        */        
-        DamagedEffects();        
+        */
+        switch (attackingObject.name)
+        {
+            case "SpitterEnemy":
+                DamagedEffectsSpitter();
+                break;
+
+            case "DiscombobulateEnemy":
+                DamagedEffectsDiscombob();
+                break;
+
+            default:
+                Debug.Log("Can't find damage effects for player");
+                break;
+        }  
     }
 
     /// <summary>
     /// Effects on the player when attacked
     /// </summary>
-    private void DamagedEffects()
-    {
+    private void DamagedEffectsSpitter()
+    {        
         mainCam.enabled = false;
         effectsCam.enabled = true;
         shakeCam.InititiateEffects(effectLength, shakeMag);
 
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);                
+    }
+
+    private void DamagedEffectsDiscombob()
+    {
+        Debug.Log("Discombobulate");
+        controller.InitiateDamageEffects();
+
     }
 
     /// <summary>

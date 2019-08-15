@@ -256,6 +256,7 @@ MonoBehaviour:
   attackAnim: {fileID: 0}
   weapon: {fileID: 6846534950003064669}
   lineOfSight: {fileID: 4090920739680515177}
+  death: {fileID: 198000012942003240, guid: ecdd96beb7f93494880c052dfccf9dc1, type: 3}
 --- !u!1001 &92062771692488005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -271,17 +272,17 @@ PrefabInstance:
     - target: {fileID: 1482807045776507077, guid: 5d3e8278e4864b941adf4d71ed851387,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.18239646
+      value: -0.24
       objectReference: {fileID: 0}
     - target: {fileID: 1482807045776507077, guid: 5d3e8278e4864b941adf4d71ed851387,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.93048453
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 1482807045776507077, guid: 5d3e8278e4864b941adf4d71ed851387,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.645286
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 1482807045776507077, guid: 5d3e8278e4864b941adf4d71ed851387,
         type: 3}
@@ -336,7 +337,7 @@ PrefabInstance:
     - target: {fileID: 1482807045776507077, guid: 5d3e8278e4864b941adf4d71ed851387,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.9374997
+      value: 0.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d3e8278e4864b941adf4d71ed851387, type: 3}

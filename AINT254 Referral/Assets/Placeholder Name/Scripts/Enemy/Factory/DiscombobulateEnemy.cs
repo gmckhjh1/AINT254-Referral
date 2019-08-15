@@ -30,6 +30,7 @@ namespace EnemyFactory
         [SerializeField] private Animation attackAnim;
         [SerializeField] private DiscombobulateAttack weapon;
         [SerializeField] private Transform lineOfSight;
+        [SerializeField] private ParticleSystem death;
 
         //Variables for state machine
         private EnemyState currentState;
@@ -160,7 +161,7 @@ namespace EnemyFactory
         /// Set gameobject to inactive when dead call ReturnToPool()
         /// </summary>
         /// <param name="Damage"></param>
-        public void TakeDamage(int Damage)
+        public void TakeDamage(int Damage, GameObject attackObject)
         {
             Health -= Damage;
 

@@ -87,7 +87,7 @@ public class SpitAttack : MonoBehaviour, IAttacks
             IDamageHandler canTakeDamage = other.GetComponent<IDamageHandler>();
             if(canTakeDamage != null)
             {
-                canTakeDamage.TakeDamage(attackPower);
+                canTakeDamage.TakeDamage(attackPower, transform.parent.gameObject);
             }
                         
             particleSystem.Stop();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -89,7 +90,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private CapsuleCollider m_Capsule;
         private float m_YRotation;
         private Vector3 m_GroundContactNormal;
-        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
+        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded, isDamaged, isEffectTriggered;
 
         private PlayerDodgeControllerExtension m_dodgeController; // Add reference to PlayerController
         private Vector2 m_dodgeInput; //Get axis input for use in calling dodge methods
@@ -97,6 +98,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private Transform hitKnee;//Raycast for slide detection
         private bool isHitBody;
         private bool isHitKnee;
+        
+        [SerializeField] private GameObject damageEffectPanel;//Panel damage effect reference
 
         public Vector3 Velocity
         {
@@ -182,11 +185,35 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             //Don't allow the player to jump backwards
             else if (CrossPlatformInputManager.GetButtonDown("Jump") && m_dodgeInput.y < 0)
-            {
+            {                
                 return;
             }
         }
 
+        public void InitiateDamageEffects()
+        {
+            if (!isEffectTriggered)
+            {
+                StartCoroutine("ControllerDamageEffects");
+            }
+            else return;
+        }
+
+        /// <summary>
+        /// Set isDamaged true for period of time.
+        /// PLayer movemnt controls will be reversed in the FixedUpdate method.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator ControllerDamageEffects()
+        {
+            isDamaged = true;
+            damageEffectPanel.SetActive(true);
+
+            yield return new WaitForSeconds(2f);
+
+            isDamaged = false;
+            damageEffectPanel.SetActive(false);
+        }
         /// <summary>
         /// Use ray casts to check for level geometry in front of player
         /// at certain heights.
@@ -251,11 +278,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 // always move along the camera forward as it is the direction that it being aimed at
                 Vector3 desiredMove = cam.transform.forward*input.y + cam.transform.right*input.x;
                 desiredMove = Vector3.ProjectOnPlane(desiredMove, m_GroundContactNormal).normalized;
-                      
-                //set the movement for the main camera
-                desiredMove.x = desiredMove.x*movementSettings.CurrentTargetSpeed;
-                desiredMove.z = desiredMove.z*movementSettings.CurrentTargetSpeed;
-                desiredMove.y = desiredMove.y*movementSettings.CurrentTargetSpeed;
+
+                //If player is damaged reverse the controls and increase their sensitivity
+                if (isDamaged == true)
+                {
+                    desiredMove.x = -desiredMove.x * movementSettings.CurrentTargetSpeed * 2;
+                    desiredMove.z = -desiredMove.z * movementSettings.CurrentTargetSpeed * 2;
+                    desiredMove.y = -desiredMove.y * movementSettings.CurrentTargetSpeed * 2;
+                }
+                else
+                {
+                    desiredMove.x = desiredMove.x * movementSettings.CurrentTargetSpeed;
+                    desiredMove.z = desiredMove.z * movementSettings.CurrentTargetSpeed;
+                    desiredMove.y = desiredMove.y * movementSettings.CurrentTargetSpeed;
+                }
 
                 if (m_RigidBody.velocity.sqrMagnitude <
                     (movementSettings.CurrentTargetSpeed*movementSettings.CurrentTargetSpeed))

@@ -48,18 +48,19 @@ namespace EnemyPool
         void SpawnRandomEnemy()
         {
             Debug.Log("In spawn random");
-            //Debug.Log(m_enemyPool);
 
-            //if (m_enemyPool)
-            //{
-                Debug.Log("Got enemy pool");
-                spawnEnemy = EnemyObjectPool.Instance.GetRandomEnemy();
-               // m_spawnedObjects.Add(EnemyObjectPool.Instance.GetRandomEnemy());
-                Debug.Log(spawnEnemy);
-                spawnEnemy.gameObject.SetActive(false);
-                spawnEnemy.transform.position = transform.position;
-                Debug.Log(spawnEnemy.transform.position);
-            //}
+            
+            Debug.Log("Got enemy pool");
+
+            spawnEnemy = EnemyObjectPool.Instance.GetRandomEnemy();
+            
+            Debug.Log(spawnEnemy);
+
+            spawnEnemy.transform.position = transform.position;
+            spawnEnemy.gameObject.SetActive(true);
+               
+            Debug.Log(spawnEnemy.transform.position);
+            
         }
     }
 }

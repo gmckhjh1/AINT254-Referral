@@ -201,7 +201,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (Input.GetKey(KeyCode.Backspace))
             {
                 Application.Quit();
-                UnityEditor.EditorApplication.isPlaying = false;
+                //UnityEditor.EditorApplication.isPlaying = false;
             }
         }
 
@@ -365,7 +365,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
         }
         
-
+    
 
         private Vector2 GetInput()
         {

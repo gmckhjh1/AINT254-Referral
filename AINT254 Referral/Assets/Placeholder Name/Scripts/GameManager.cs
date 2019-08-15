@@ -14,7 +14,7 @@ public static class GameManager
     static void CloseGame()
     {
         Application.Quit();
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 
     /// <summary>

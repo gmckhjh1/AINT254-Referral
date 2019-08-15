@@ -33,7 +33,7 @@ namespace EnemyPool
         //Queue to store pooled enemyObjs
         //Random objects usually selected due to potential different enemy types
         //but Queue still in use in case of later change
-        private List<GameObject> pooledEnemiesAvailable = new List<GameObject>();
+        private Queue<GameObject> pooledEnemiesAvailable = new Queue <GameObject>();
 
         // Start is called before the first frame update
         void Start()
@@ -82,16 +82,16 @@ namespace EnemyPool
         public GameObject GetRandomEnemy()
         {
             GameObject spawnEnemy;
-            if(pooledEnemiesAvailable != null)
+            if(pooledEnemiesAvailable.Count != 0)
             {
-                spawnEnemy = RandEnemyHelper() as GameObject;
-                pooledEnemiesAvailable.Remove(spawnEnemy);
+                spawnEnemy = pooledEnemiesAvailable.Dequeue(); 
+                
                 return spawnEnemy;
             }
             else
             {
                 AddToPool();
-                spawnEnemy = RandEnemyHelper();
+                spawnEnemy = pooledEnemiesAvailable.Dequeue();
                 return spawnEnemy;
             }
         }       
@@ -106,10 +106,10 @@ namespace EnemyPool
 
             //Instantiate and disable
             Instantiate(enemy, transform.position, transform.rotation);            
-            //enemy.SetActive(false);
+            enemy.SetActive(false);
 
             //Add to pool and return
-            pooledEnemiesAvailable.Add(enemy);
+            pooledEnemiesAvailable.Enqueue(enemy);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace EnemyPool
         /// <param name="m_enemy"></param>
         public void ReturnToPool(GameObject m_enemy)
         {
-            pooledEnemiesAvailable.Add(m_enemy);
+            pooledEnemiesAvailable.Enqueue(m_enemy);
         }
                 
         /// <summary>
@@ -127,7 +127,7 @@ namespace EnemyPool
         /// <returns></returns>
         private GameObject RandEnemyHelper()
         {
-            return enemies[rand.Next(0, enemies.Count)] as GameObject;
+            return enemies[rand.Next(0, enemies.Count)];             
         }
     }
 }

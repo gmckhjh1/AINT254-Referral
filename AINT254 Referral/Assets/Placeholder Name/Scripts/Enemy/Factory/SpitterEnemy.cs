@@ -31,6 +31,7 @@ namespace EnemyFactory
         [SerializeField] private Animation attackAnim;
         [SerializeField] private SpitAttack weapon;
         [SerializeField] private Transform lineOfSight;
+        [SerializeField] private ParticleSystem death;
 
         //Variables for state machine
         private EnemyState currentState;
@@ -152,6 +153,9 @@ namespace EnemyFactory
         /// </summary>
         public void ReturnToPool()
         {
+            death.transform.position = transform.position;
+            death.Play();//Play death particle effect
+
             gameObject.SetActive(false);
             EnemyPool.EnemyObjectPool.Instance.ReturnToPool(this.gameObject);
         }
@@ -161,13 +165,15 @@ namespace EnemyFactory
         /// Set gameobject to inactive when dead call ReturnToPool()
         /// </summary>
         /// <param name="Damage"></param>
-        public void TakeDamage(int Damage)
+        public void TakeDamage(int Damage, GameObject attackingEnemy)
         {
-            Health -= Damage;
+            health -= Damage;
 
-            if(Health <= 0)
+            if(health <= 0)
             {
                 gameObject.SetActive(false);
+                death.transform.position = gameObject.transform.position;
+                death.Play();                
                 ReturnToPool();
             }
         }

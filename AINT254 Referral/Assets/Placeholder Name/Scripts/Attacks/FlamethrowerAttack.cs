@@ -1,12 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-//
-//Class to start SpitAttack
-//
-public class SpitAttack : MonoBehaviour, IAttacks
+public class FlamethrowerAttack : MonoBehaviour
 {
     [SerializeField] private int attackPower = 5;//Set attack power
     [SerializeField] private float attackReload = 3f;//Set wait time between attacks
@@ -35,8 +31,8 @@ public class SpitAttack : MonoBehaviour, IAttacks
     /// public method to allow other classes to call the attack.
     /// </summary>
     public void StartAttack()
-    {              
-        lastCoroutine = StartCoroutine(Attacking());
+    {
+        particleSystem.Play();
     }
 
     /// <summary>
@@ -44,30 +40,8 @@ public class SpitAttack : MonoBehaviour, IAttacks
     /// Also stop particle system as it will finish playing it's current cycle.
     /// </summary>
     public void StopAttack()
-    { 
-        if (lastCoroutine != null)
-        {
-            StopCoroutine(lastCoroutine);
-            particleSystem.Stop();
-        }
-        else return;
-    }
-
-    /// <summary>
-    /// Attacking coroutine loop. 
-    /// Plays continuously until interrupted by the calling class.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator Attacking()
     {
-        Debug.Log("Is attacking");
-        particleSystem.Play();
-        yield return new WaitForSeconds(attackLength);
-
-        particleSystem.Stop();        
-        yield return new WaitForSeconds(attackReload);
-
-        StartAttack();
+        particleSystem.Stop();
     }
     
     /// <summary>
@@ -75,23 +49,23 @@ public class SpitAttack : MonoBehaviour, IAttacks
     /// using the IDamageHandler. Turn off particle system. 
     /// </summary>
     /// <param name="other"></param>
-    
+
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log("In collision ");
+        Debug.Log("in particle collision method");
         
-        Debug.Log(other);
-        if (other.tag == "Player")
+        if (other.tag == "Enemy")
         {
+            Debug.Log(other);
             //Call IDamageHandler
             IDamageHandler canTakeDamage = other.GetComponent<IDamageHandler>();
-            if(canTakeDamage != null)
+            if (canTakeDamage != null)
             {
                 canTakeDamage.TakeDamage(attackPower, transform.parent.gameObject);
             }
-                        
+
             particleSystem.Stop();
         }
-        else return;                
+        else return;
     }
 }
